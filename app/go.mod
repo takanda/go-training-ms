@@ -1,3 +1,3 @@
-module web
+module main
 
 go 1.19
