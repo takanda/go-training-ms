@@ -1,7 +1,7 @@
 package main
 
-import "main/types"
+import "main/functions"
 
 func main() {
-	types.ShowBasicType()
+	functions.ShowFunctions()
 }
