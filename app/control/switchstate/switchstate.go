@@ -1,7 +1,7 @@
 package switchstate
 
 import (
-	"time"
+	"regexp"
 )
 
 func Switchstate() string {
@@ -20,10 +20,23 @@ func Switchstate() string {
 	// 	return "no match"
 	// }
 
-	switch time.Now().Weekday().String() {
-		case "Monday", "Tuesday", "Wednesday", "Thursday", "Friday":
-			return "Weekday!"
-		default:
-			return "Weekend!"
-	}
+	// switch time.Now().Weekday().String() {
+	// 	case "Monday", "Tuesday", "Wednesday", "Thursday", "Friday":
+	// 		return "Weekday!"
+	// 	default:
+	// 		return "Weekend!"
+	// }
+	var email = regexp.MustCompile(`^[^@]+@[^@.]+\.[^@.]+`)
+    var phone = regexp.MustCompile(`^[(]?[0-9][0-9][0-9][). \-]*[0-9][0-9][0-9][.\-]?[0-9][0-9][0-9][0-9]`)
+
+    contact := "foo@bar.com"
+
+    switch {
+    case email.MatchString(contact):
+        return("email")
+    case phone.MatchString(contact):
+        return("phone number")
+    default:
+        return("not match")
+    }
 }
