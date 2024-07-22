@@ -1,11 +1,8 @@
 package main
 
-import "fmt"
-import "control/recoverfunc"
-
-
+// import "fmt"
+import "control/exercise"
 
 func main() {
-	recoverfunc.Recoverfunc(2, 0)
-	fmt.Println("Program finished successfully!")
+	exercise.FizzBuzz()
 }
