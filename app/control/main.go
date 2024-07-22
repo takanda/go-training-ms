@@ -1,10 +1,11 @@
 package main
 
-// import "fmt"
-import "control/deferfunc"
+import "fmt"
+import "control/panicfunc"
 
 
 
 func main() {
-	deferfunc.Deferfunc()
+	panicfunc.Panicfunc(2, 0)
+	fmt.Println("Program finished successfully!")
 }
