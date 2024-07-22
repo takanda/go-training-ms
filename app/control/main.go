@@ -1,11 +1,10 @@
 package main
 
-import (
-	"fmt"
-	"control/forloop"
-)
+// import "fmt"
+import "control/deferfunc"
+
 
 
 func main() {
-	fmt.Println(forloop.Forloop())
+	deferfunc.Deferfunc()
 }
