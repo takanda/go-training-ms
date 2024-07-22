@@ -4,8 +4,8 @@ FROM golang:1.19
 WORKDIR /app
 
 # Download Go modules
-COPY app/go.mod ./
-RUN go mod download
+# COPY app/go.mod ./
+# RUN go mod download
 
 # Copy the source code
-COPY app/code ./
+COPY app/ .
