@@ -1,11 +1,11 @@
 package main
 
 import "fmt"
-import "control/panicfunc"
+import "control/recoverfunc"
 
 
 
 func main() {
-	panicfunc.Panicfunc(2, 0)
+	recoverfunc.Recoverfunc(2, 0)
 	fmt.Println("Program finished successfully!")
 }
