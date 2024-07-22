@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"control/switchstate"
+	"control/forloop"
 )
 
 
 func main() {
-	fmt.Println(switchstate.Switchstate())
+	fmt.Println(forloop.Forloop())
 }
