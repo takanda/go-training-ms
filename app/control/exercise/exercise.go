@@ -16,3 +16,23 @@ func FizzBuzz() {
 		}
 	}
 }
+
+func FindPrimeNumber(number int) {
+	for i := 1; i <= number; i++ {
+		result := true
+		if i == 1 {
+			continue
+		}
+
+		for j := 2; j < i; j++ {
+			if i % j == 0 {
+				result = false
+				break
+			}
+		}
+
+		if result {
+			fmt.Printf("%v\n", i)
+		}
+	}
+}

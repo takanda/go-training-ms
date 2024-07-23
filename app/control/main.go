@@ -4,5 +4,5 @@ package main
 import "control/exercise"
 
 func main() {
-	exercise.FizzBuzz()
+	exercise.FindPrimeNumber(20)
 }
