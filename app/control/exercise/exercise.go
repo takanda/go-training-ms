@@ -36,3 +36,19 @@ func FindPrimeNumber(number int) {
 		}
 	}
 }
+
+func NegativeNumBecomePanic() {
+	var val int
+	for {
+		fmt.Print("Enter number: ")
+		fmt.Scanf("%d", &val)
+		switch {
+		case val == 0:
+			fmt.Println(val, "is neither negative nor positive")
+		case val > 0:
+			fmt.Println("You entered:", val)
+		case val < 0:
+			panic("negative value")
+	}
+	}
+}

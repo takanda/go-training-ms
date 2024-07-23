@@ -4,5 +4,5 @@ package main
 import "control/exercise"
 
 func main() {
-	exercise.FindPrimeNumber(20)
+	exercise.NegativeNumBecomePanic()
 }
