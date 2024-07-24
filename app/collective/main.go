@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+// import "fmt"
+import "collective/array"
 
 func main() {
-	fmt.Println("hello collective")
+	array.LearnArray()
 }
