@@ -1,8 +1,8 @@
 package main
 
 // import "fmt"
-import "collective/array"
+import "collective/slice"
 
 func main() {
-	array.LearnArray()
+	slice.LearnSlice()
 }
