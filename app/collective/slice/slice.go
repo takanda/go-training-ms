@@ -5,7 +5,8 @@ import "fmt"
 func LearnSlice() {
 	// SliceBasic()
 	// AddSliceElement()
-	RemoveSliceElement()
+	// RemoveSliceElement()
+	CopySlice()
 }
 
 func SliceBasic() {
@@ -41,4 +42,17 @@ func RemoveSliceElement() {
 		letters = append(letters[:remove], letters[remove+1:]...)
 		fmt.Println("After", letters)
 	}
+}
+
+func CopySlice() {
+	letters := []string{"A", "B", "C", "D", "E"}
+	fmt.Println("Before", letters)
+	
+	slice1 := letters[:2]
+	slice2 := make([]string, 3)
+	copy(slice2, letters[1:4])
+	
+	slice1[1] = "Z"
+	fmt.Println("After", letters)
+	fmt.Println("Slice2", slice2)
 }
