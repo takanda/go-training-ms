@@ -1,8 +1,8 @@
 package main
 
 // import "fmt"
-import "collective/mapbasic"
+import "collective/structure"
 
 func main() {
-	mapbasic.LearnMap()
+	structure.LearnStructure()
 }
