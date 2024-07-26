@@ -1,8 +1,8 @@
 package main
 
 // import "fmt"
-import "collective/slice"
+import "collective/mapbasic"
 
 func main() {
-	slice.LearnSlice()
+	mapbasic.LearnMap()
 }
