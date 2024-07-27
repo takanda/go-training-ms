@@ -25,6 +25,8 @@ func ShowFunctions() {
 // 	return 
 // }
 
+// ポインタ変数への値の割り当てはデリファレンス(*をつける)しなければエラーになる
+// structのフィールドにアクセスする時のみ自動的なデリファレンスが実行される
 func updateName(name *string) {
 	*name = "David"
 }
