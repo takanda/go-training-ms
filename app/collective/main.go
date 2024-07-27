@@ -1,8 +1,8 @@
 package main
 
 // import "fmt"
-import "collective/structure"
+import "collective/exercise"
 
 func main() {
-	structure.LearnStructure()
+	exercise.CalcFib()
 }
