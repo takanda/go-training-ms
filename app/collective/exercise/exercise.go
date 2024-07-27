@@ -4,34 +4,29 @@ import (
 	"fmt"
 )
 
-
-func CalcFib() {
+func RunCalcFib() {
 	var number int
-	var result []int
 	fmt.Print("Please enter number:")
 	fmt.Scanf("%d", &number)
+	fmt.Println("Result:", CalcFib(number))
+}
+
+func CalcFib(number int) []int {
+	result := make([]int, number)
 	defer func() {
 		handler := recover()
 		if handler != nil {
-			fmt.Println("Error", result)
+			result = make([]int, 0)
 		}
 	}()
 	if number <= 2 {
 		panic("Input must be greater than 2")
 	}
 
-	for i := 1; i <= number; i++ {
-		if i <= 2 {
-			result = append(result, 1)
-			continue
-		}
-		
-		prevNumbers := result[len(result)-2:]
-		appendNumber := 0
-		for _, num := range prevNumbers {
-			appendNumber += num
-		}
-		result = append(result, appendNumber)
+	result[0], result[1] = 1, 1
+
+	for i := 2; i < number; i++ {
+		result[i] = result[i-1] + result[i-2]
 	}
-	fmt.Println("Result is:", result)
+	return result
 }

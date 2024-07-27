@@ -4,5 +4,5 @@ package main
 import "collective/exercise"
 
 func main() {
-	exercise.CalcFib()
+	exercise.RunCalcFib()
 }
