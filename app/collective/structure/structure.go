@@ -1,6 +1,7 @@
 package structure
 
 import "fmt"
+import "encoding/json"
 
 type Person struct {
 	ID        int
@@ -28,7 +29,9 @@ func LearnStructure() {
 	// employeeCopy := &john
 	// employeeCopy.Address = "Street!"
 	// fmt.Println(john)
-	EmbedStructure()
+
+	// EmbedStructure()
+	JsonStructure()
 }
 
 func EmbedStructure() {
@@ -41,3 +44,42 @@ func EmbedStructure() {
 	fmt.Println(employee)
 }
 
+type Person2 struct {
+	ID        int
+	FirstName string `json:"name"`
+	LastName  string
+	Address   string `json:"address,omitempty"`
+}
+
+type Employee2 struct {
+	Person2
+	ManagerID int
+}
+
+type Contractor2 struct {
+	Person2
+	CompanyID int
+}
+
+
+func JsonStructure() {
+	employees := []Employee2{
+		Employee2{
+			Person2: Person2{
+				LastName: "Doe", FirstName: "Joe",
+			},
+		},
+		Employee2{
+			Person2: Person2{
+				LastName: "Cambell", FirstName: "David",
+			},
+		},
+	}
+
+	data, _ := json.Marshal(employees)
+	fmt.Printf("%s\n", data)
+
+	var decoded []Employee2
+    json.Unmarshal(data, &decoded)
+    fmt.Printf("%v", decoded)
+}
