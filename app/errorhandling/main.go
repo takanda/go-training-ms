@@ -1,8 +1,9 @@
 package main
 
-
-import "errorhandling/basic"
+import (
+	"errorhandling/logging"
+)
 
 func main() {
-	basic.BasicErrorHandling()
+    logging.RunZeroLog()
 }
