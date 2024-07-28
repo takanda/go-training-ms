@@ -1,9 +1,9 @@
 package main
 
 import (
-	"interface/customapi"
+	"interface/exercise"
 )
 
 func main() {
-	customapi.RunCustomAPI()
+	exercise.RunExercise()
 }
