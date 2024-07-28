@@ -1,9 +1,9 @@
 package main
 
 import (
-	"interface/method"
+	"interface/extendedinterface"
 )
 
 func main() {
-	method.EmbedMethod()
+	extendedinterface.LearnExInterface()
 }
