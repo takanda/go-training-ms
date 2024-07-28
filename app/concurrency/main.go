@@ -1,7 +1,7 @@
 package main
 
-import "concurrency/channel"
+import "concurrency/bufferchan"
 
 func main() {
-	channel.RunConcurrency()
+	bufferchan.RunBufferChan()
 }
