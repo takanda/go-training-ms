@@ -1,9 +1,9 @@
 package main
 
 import (
-	"interface/extendedinterface"
+	"interface/customapi"
 )
 
 func main() {
-	extendedinterface.LearnExInterface()
+	customapi.RunCustomAPI()
 }
