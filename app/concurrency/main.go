@@ -1,7 +1,7 @@
 package main
 
-import "concurrency/basic"
+import "concurrency/channel"
 
 func main() {
-	basic.RunConcurrency()
+	channel.RunConcurrency()
 }
