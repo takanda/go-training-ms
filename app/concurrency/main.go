@@ -1,7 +1,7 @@
 package main
 
-import "concurrency/bufferchan"
+import "concurrency/exercise"
 
 func main() {
-	bufferchan.RunBufferChan()
+	exercise.RunFib()
 }
