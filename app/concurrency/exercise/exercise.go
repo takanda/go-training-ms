@@ -6,41 +6,76 @@ import (
 	"math/rand"
 )
 
-func fib(target int, ch chan string) {
-	result := make([]int, target)
-	result[0], result[1] = 1, 1
-
-	if target <= 2 {
-		result = make([]int, 0)
-		ch <- fmt.Sprintf("%v\n", result) 
-	}
-
-	for i := 2; i < target; i++ {
-		result[i] = result[i-1] + result[i-2]
+func fib(target int, ch chan int) {
+	x, y := 1, 1
+	for i := 0; i < target; i++ {
+		x, y = y, x+y
 	}
 
 	r := rand.Intn(3)
     time.Sleep(time.Duration(r) * time.Second)
 
-	ch <- fmt.Sprintf("%v\n", result)
+	ch <- x
 }
 
 func RunFib() {
+	target := UserInterface()
 	start := time.Now()
-
-	ch := make(chan string)
-
-	var target int
-	fmt.Print("Please enter number: ")
-	fmt.Scanf("%d", &target)
+	
+	ch := make(chan int, target)
 	for i := 0; i < target; i++ {
-		go fib(target, ch)
+		go fib(i, ch)
 	}
-
 	for i := 0; i < target; i++ {
 		fmt.Println(<-ch)
 	}
 
 	elapsed := time.Since(start)
 	fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())
+}
+
+var quit = make(chan bool)
+
+func fib2(c chan int) {
+	x, y := 1, 1
+
+	for {
+		select {
+			case c <- x:
+				x, y = y, x+y
+			case <-quit:
+				fmt.Println("Done calculating Fibonacci!")
+				return
+		}
+	}
+}
+
+func RunFib2() {
+	start := time.Now()
+	command := ""
+	data := make(chan int)
+
+	go fib2(data)
+
+    for {
+        num := <-data
+        fmt.Println(num)
+        fmt.Scanf("%s", &command)
+        if command == "quit" {
+            quit <- true
+            break
+        }
+    }
+
+	time.Sleep(1 * time.Second)
+
+    elapsed := time.Since(start)
+    fmt.Printf("Done! It took %v seconds!\n", elapsed.Seconds())
+}
+
+func UserInterface() int {
+	var target int
+	fmt.Print("Please enter number: ")
+	fmt.Scanf("%d", &target)
+	return target
 }
