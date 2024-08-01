@@ -1,6 +1,9 @@
 package bank
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Customer struct {
 	Name    string
@@ -33,4 +36,8 @@ func (a *Account) Withdraw(amount float64) error {
 	
 	a.Balance -= amount
     return nil
+}
+
+func (a *Account) Statement() string {
+	return fmt.Sprintf("%v - %v - %v", a.Number, a.Customer.Name, a.Balance)
 }

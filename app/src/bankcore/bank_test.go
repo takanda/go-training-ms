@@ -2,8 +2,8 @@ package bank
 
 import "testing"
 
-func TestAccount(t *testing.T) {
-	account := Account{
+func setup() Account {
+	return Account{
 		Customer: Customer{
 			Name:    "John",
 			Address: "Los Angeles, California",
@@ -12,6 +12,10 @@ func TestAccount(t *testing.T) {
 		Number: 1001,
 		Balance: 0,
 	}
+}
+
+func TestAccount(t *testing.T) {
+	account := setup()
 
 	if account.Name == "" {
 		t.Error("can't create an Account object")
@@ -19,16 +23,7 @@ func TestAccount(t *testing.T) {
 }
 
 func TestDeposit(t *testing.T) {
-	account := Account{
-		Customer: Customer{
-			Name:    "John",
-			Address: "Los Angeles, California",
-			Phone:   "(213) 555 0147",
-		},
-		Number: 1001,
-		Balance: 0,
-	}
-
+	account := setup()
 	account.Deposit(10)
 
 	if account.Balance != 10 {
@@ -37,15 +32,7 @@ func TestDeposit(t *testing.T) {
 }
 
 func TestDepositInvalid(t *testing.T) {
-	account := Account{
-		Customer: Customer{
-			Name:    "John",
-			Address: "Los Angeles, California",
-			Phone:   "(213) 555 0147",
-		},
-		Number: 1001,
-		Balance: 0,
-	}
+	account := setup()
 
 	if err := account.Deposit(-10); err == nil {
 		t.Error("only positive numbers should be allowed to deposit")
@@ -53,20 +40,20 @@ func TestDepositInvalid(t *testing.T) {
 }
 
 func TestWithdraw(t *testing.T) {
-	account := Account{
-		Customer: Customer{
-			Name:    "John",
-			Address: "Los Angeles, California",
-			Phone:   "(213) 555 0147",
-		},
-		Number: 1001,
-		Balance: 0,
-	}
-
+	account := setup()
 	account.Deposit(10)
 	account.Withdraw(10)
 
 	if account.Balance != 0 {
 		t.Error("balance is not being updated after withdraw")
 	}
+}
+
+func TestStatement(t *testing.T) {
+	account := setup()
+	statement := account.Statement()
+
+	if statement != "1001 - John - 0" {
+        t.Error("statement doesn't have the proper format: ", statement)
+    }
 }
