@@ -82,16 +82,14 @@ func deposit(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if amount <= 0 {
-		fmt.Fprintf(w, "amount must be greater than zero")
-		return
-	}
-
 	if account, ok := accounts[number32]; !ok {
 		fmt.Fprintf(w, "Account with number %v can't be found", number32)
 	} else {
-		account.Balance += amount
-		w.WriteHeader(http.StatusCreated)
+		err := account.Deposit(amount)
+		if err != nil {
+			fmt.Fprintf(w, "%v", err)
+		} else {
+			w.WriteHeader(http.StatusCreated)
+		}
 	}
-
 }
