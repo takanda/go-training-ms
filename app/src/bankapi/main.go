@@ -130,3 +130,72 @@ func withdraw(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 }
+
+func transfer(w http.ResponseWriter, req *http.Request) {
+	// A → B
+	// 1. A - amount ・・・withdraw
+	// 2. B + amount ・・・deposit
+	// Transaction needed
+
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Invalid request body")
+		return
+	}
+	defer req.Body.Close()
+	
+	var requestData map[string]interface{}
+	// requestDataを渡す場合、Unmarshalの第二引数は上のrequestDataとは別のメモリに格納される変数(中身はrequestDataのコピー)
+	// しかし、後続処理で使用するrequestDataは上のrequestDataが格納されたメモリを参照する
+	// そのため、Unmarshalでbodyを受け取っていないrequestDataを参照するため後続処理が正常に作動しない
+	// なのでUnmarshalにはポインターを渡す必要がある
+	// Unmarshalにはnilかポインターを渡す必要があるが、上のrequestDataの定義の段階ではnilなので
+	// requestDataを渡してもエラーにはならない
+	if err := json.Unmarshal(body, &requestData); err != nil {
+		fmt.Fprintf(w, "Invalid JSON")
+		return
+	}
+
+	float64Number1, ok := requestData["number1"].(float64)
+	int32Number1 := int32(float64Number1)
+	if !ok {
+		fmt.Fprintf(w, "Invalid number")
+		return
+	}
+	float64Number2, ok := requestData["number2"].(float64)
+	int32Number2 := int32(float64Number2)
+	if !ok {
+		fmt.Fprintf(w, "Invalid number")
+		return
+	}
+	
+	amount, ok := requestData["amount"].(float64)
+	if !ok {
+		fmt.Fprintf(w, "Invalid amount")
+		return
+	}
+
+	if account1, ok := accounts[int32Number1]; !ok {
+		fmt.Fprintf(w, "Account with number %v can't be found", int32Number1)
+		return
+	} else {
+		err := account1.Withdraw(amount)
+		if err != nil {
+			fmt.Fprintf(w, "%v", err)
+			return
+		}
+	}
+	
+	if account2, ok := accounts[int32Number2]; !ok {
+		fmt.Fprintf(w, "Account with number %v can't be found", int32Number1)
+		return
+	} else {
+		err := account2.Deposit(amount)
+		if err != nil {
+			fmt.Fprintf(w, "%v", err)
+			return
+		} else {
+			w.WriteHeader(http.StatusOK)
+		}
+	}
+}

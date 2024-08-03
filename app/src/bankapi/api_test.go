@@ -18,6 +18,15 @@ func setup() {
 		Number: 1001,
 		Balance: 50,
 	}
+	accounts[1002] = &bank.Account{
+		Customer: bank.Customer{
+			Name:    "Tom",
+			Address: "Miami, Florida",
+			Phone:   "(207) 333 3119",
+		},
+		Number: 1002,
+		Balance: 75,
+	}
 }
 
 func TestStatementHandler(t *testing.T) {
@@ -78,5 +87,26 @@ func TestWithdrawHandler(t *testing.T) {
 
 	if accounts[1001].Balance != 45 {
 		t.Errorf("withdraw could not be executed: result %v want %v", accounts[1001].Balance, 45)
+	}
+}
+
+func TestTransferHandler(t *testing.T) {
+	setup()
+	jsonBody := []byte(`{"number1": 1001, "number2": 1002, "amount": 15}`)
+	req, _ := http.NewRequest("POST", "/transfer", bytes.NewBuffer(jsonBody))
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(transfer)
+
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+		return
+	}
+	
+	if accounts[1001].Balance != 35 || accounts[1002].Balance != 90 {
+		t.Errorf("transfer could not be executed correctly: result 1001-%v, 1002-%v want 1001-%v, 1002-%v",
+		          accounts[1001].Balance, accounts[1002].Balance, 35, 90)
 	}
 }
