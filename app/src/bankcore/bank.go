@@ -41,3 +41,11 @@ func (a *Account) Withdraw(amount float64) error {
 func (a *Account) Statement() string {
 	return fmt.Sprintf("%v - %v - %v", a.Number, a.Customer.Name, a.Balance)
 }
+
+type Bank interface {
+	Statement() string
+}
+
+func Statement(b Bank) string {
+	return b.Statement()
+}

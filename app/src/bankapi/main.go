@@ -10,16 +10,29 @@ import (
 	"encoding/json"
 )
 
-var accounts = map[int32]*bank.Account{}
+var accounts = map[int32]*CustomAccount{}
 
 func main() {
-	accounts[1001] = &bank.Account{
-		Customer: bank.Customer{
-			Name:    "John",
-			Address: "Los Angeles, California",
-			Phone:   "(213) 555 0147",
+	accounts[1001] = &CustomAccount{
+		Account: &bank.Account {
+			Customer: bank.Customer{
+				Name:    "John",
+				Address: "Los Angeles, California",
+				Phone:   "(213) 555 0147",
+			},
+			Number: 1001,
 		},
-		Number: 1001,
+	}
+	accounts[1002] = &CustomAccount{
+		Account: &bank.Account {
+			Customer: bank.Customer{
+				Name:    "Tom",
+				Address: "Miami, Florida",
+				Phone:   "(207) 333 3119",
+			},
+			Number: 1002,
+			Balance: 75,
+		},
 	}
 	http.HandleFunc("GET /statement", statement)
 	http.HandleFunc("POST /deposit", deposit)
@@ -49,7 +62,7 @@ func statement(w http.ResponseWriter, req *http.Request) {
 		if account, ok := accounts[number32]; !ok {
 			fmt.Fprintf(w, "Account with number %v can't be found", number32)
 		} else {
-			fmt.Fprintf(w, account.Statement())
+			json.NewEncoder(w).Encode(bank.Statement(account))
 		}
 	}
 }
@@ -198,4 +211,18 @@ func transfer(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		}
 	}
+}
+
+
+type CustomAccount struct {
+	*bank.Account
+}
+
+func (c *CustomAccount) Statement() string {
+	json, err := json.Marshal(c)
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(json)
 }
