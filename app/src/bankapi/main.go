@@ -12,7 +12,7 @@ import (
 
 var accounts = map[int32]*bank.Account{}
 
-func init() {
+func main() {
 	accounts[1001] = &bank.Account{
 		Customer: bank.Customer{
 			Name:    "John",
@@ -21,11 +21,9 @@ func init() {
 		},
 		Number: 1001,
 	}
-}
-
-func main() {
 	http.HandleFunc("GET /statement", statement)
 	http.HandleFunc("POST /deposit", deposit)
+	http.HandleFunc("POST /withdraw", withdraw)
 
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
@@ -90,6 +88,45 @@ func deposit(w http.ResponseWriter, req *http.Request) {
 			fmt.Fprintf(w, "%v", err)
 		} else {
 			w.WriteHeader(http.StatusCreated)
+		}
+	}
+}
+
+func withdraw(w http.ResponseWriter, req *http.Request) {
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Invalid request body")
+		return
+	}
+	defer req.Body.Close()
+
+	var requestData map[string]interface{}
+	if err := json.Unmarshal(body, &requestData); err != nil {
+		fmt.Fprintf(w, "Invalid JSON format")
+		return
+	}
+
+	floatNumber, ok := requestData["number"].(float64)
+	intNumber := int32(floatNumber)
+	if !ok {
+		fmt.Fprintf(w, "Invalid number")
+		return
+	}
+	
+	amount, ok := requestData["amount"].(float64)
+	if !ok {
+		fmt.Fprintf(w, "Invalid amount")
+		return
+	}
+
+	if account, ok := accounts[intNumber]; !ok {
+		fmt.Fprintf(w, "Account with number %v can't be found", intNumber)
+	} else {
+		err := account.Withdraw(amount)
+		if err != nil {
+			fmt.Fprintf(w, "%v", err)
+		} else {
+			w.WriteHeader(http.StatusOK)
 		}
 	}
 }
