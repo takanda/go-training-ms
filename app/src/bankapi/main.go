@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"strconv"
 	"log"
+	"io"
+	"encoding/json"
 )
 
-var accounts = map[float64]*bank.Account{}
+var accounts = map[int32]*bank.Account{}
 
 func init() {
 	accounts[1001] = &bank.Account{
@@ -22,7 +24,9 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/statement", statement)
+	http.HandleFunc("GET /statement", statement)
+	http.HandleFunc("POST /deposit", deposit)
+
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
 
@@ -34,15 +38,60 @@ func statement(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if number, err := strconv.ParseFloat(numberqs, 64); err != nil {
+	number, err := strconv.Atoi(numberqs)
+	if err != nil {
+		fmt.Fprintf(w, "Invalid account number")
+		return
+	}
+
+	number32 := int32(number)
+	if err != nil {
 		fmt.Fprintf(w, "Invalid account number")
 	} else {
-		account, presence := accounts[number]
-
-		if presence {
-			fmt.Fprintf(w, account.Statement())
+		if account, ok := accounts[number32]; !ok {
+			fmt.Fprintf(w, "Account with number %v can't be found", number32)
 		} else {
-			fmt.Fprintf(w, "Account with number %v can't be found", number)
+			fmt.Fprintf(w, account.Statement())
 		}
 	}
+}
+
+func deposit(w http.ResponseWriter, req *http.Request) {
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Invalid request body")
+		return
+	}
+	defer req.Body.Close()
+
+	var requestData map[string]interface{}
+	if err := json.Unmarshal(body, &requestData); err != nil {
+		fmt.Fprintf(w, "Invalid JSON format")
+		return
+	}
+	
+	number64, ok := requestData["number"].(float64)
+	number32 := int32(number64)
+	if !ok {
+		fmt.Fprintf(w, "Invalid number")
+		return
+	}
+	amount, ok := requestData["amount"].(float64)
+	if !ok {
+		fmt.Fprintf(w, "Invalid amount")
+		return
+	}
+
+	if amount <= 0 {
+		fmt.Fprintf(w, "amount must be greater than zero")
+		return
+	}
+
+	if account, ok := accounts[number32]; !ok {
+		fmt.Fprintf(w, "Account with number %v can't be found", number32)
+	} else {
+		account.Balance += amount
+		w.WriteHeader(http.StatusCreated)
+	}
+
 }
